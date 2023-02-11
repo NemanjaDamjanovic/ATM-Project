@@ -101,6 +101,3 @@ $pdf->Output('Transaction History.pdf', 'D');
 ob_end_flush();
 
 ?>
-
-<!-- File's which are included to current file. -->
-<?php include '../includes/footer.php'; ?>
