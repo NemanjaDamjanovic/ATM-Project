@@ -1,112 +1,83 @@
-<!-- File's which are included in sign_up.php file. -->
-<?php include 'includes/header.php'; ?>
-<?php include 'configuration/database.php'; ?>
+<!-- File's which are included to current file. -->
+<?php include '../includes/header.php'; ?>
+<?php include '../configuration/database.php'; ?>
 
 <?php
-  // Start a session.
-  // session_start();
-  // Welcome user by his session.
-  // if(isset($_SESSION['id'])) {
-  //   echo '<h1 style="color: green">Welcome Admin ' . ucfirst($_SESSION['id']) . '</h1>';
-  // }
-?>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.22/datatables.min.css"/>
-<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.22/datatables.min.js"></script>
+// Start a session.
+session_start();
 
-<h3 class="mt-5 mb-5" style="color: back">Admin Dashboard</h3>
-<!-- Style table, th and td. -->
-<style>
-  table, th, td {
-    border: 1px solid black;
-    text-align: center;
-  }
-</style>
-<h5 style="color: black">Information about users</h5>
-<div class="mb-5 mt-5">
-  <table class="display" id="example" style="width: 1000px; height: 150px;">
-  <!-- HTML for table header -->
-    <thead>
-      <tr>
-        <th>Full Name</th>
-        <th>Username</th>
-        <th>User PIN</th>
-        <th>Balance</th>
-        <th>Last Transaction</th>
-        <th>Date of last Transaction</th>
-        <th colspan="3">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-<!-- PHP code to fetch and display data -->
-<?php
-  // Accsess to user table.
-  $query1 = "SELECT * FROM users";
+// Wrap session ID into variable.
+if(isset($_SESSION['id'])) {
+$user_id = $_SESSION['id'];
 
-  // Execute the query.
-  $result1 = mysqli_query($connect, $query1);
-  // Check if query failed.
-  if ($result1 === false) {
-    echo "Query failed: " . mysqli_error($connect);
-  } else {
-    // Loop trought all user rows.
-    while ($row1 = mysqli_fetch_array($result1)) {
-      echo "<tr>";
-      echo "<td>" . $row1['user_full_name'] . "</td>";
-      echo "<td>" . $row1['user_id'] . "</td>";
-      echo "<td>" . $row1['user_pass'] . "</td>";
-      echo "<td>" . number_format($row1['user_balance']) . " RSD" .  "</td>";
+// Select user password by his own user_id from database table.
+$query = "SELECT user_pass FROM users WHERE user_id = '$user_id'";
+// Execute the query.
+$result = mysqli_query($connect, $query);
+// Fetches a result row from a query result as an associative array.
+$row = mysqli_fetch_assoc($result);
+// Retrieve exact value from query, stored in variable.
+$pin = $row['user_pass'];
 
-      // Query to retrieve the last transaction for each user
-      $query2 = "SELECT * FROM withdraw_history WHERE user_id = '" . $row1['user_id'] . "' ORDER BY transaction_date DESC LIMIT 1";
-      // Execute the query.
-      $result2 = mysqli_query($connect, $query2);
-      // Fetches a result row from a query result as an associative array.
-      $row2 = mysqli_fetch_array($result2);
-
-      // Check if row exist and if does fill table with data from database.
-      if ($row2) {
-        echo "<td>" . number_format($row2['user_last_transaction']) . " RSD" . "</td>";
-        echo "<td>" . $row2['transaction_date'] . "</td>";
-      } else {
-        // Otherwise leave "-" in table field.
-        echo "<td>-</td>";
-        echo "<td>-</td>";
-      }
-      echo "<td>";
-      // Check user status if its blocked and display it in table.
-      if ($row1['user_status'] == 'Blocked') {
-        echo "<p style='color: red'>Blocked</p>";
-      } else {
+    // Check if confirm is clicked.
+    if(isset($_POST['confirm'])){
         
-        // Block user.
-        echo "<a href='admin options/block_user.php?id=" . $row1['id'] . "'><img src='images/block.png' alt='Block user' width='25' height='25'></a>";
+        // Create variables for old and new pin.
+        $old_pin = $_POST['old_pin'];
+        $new_pin = $_POST['new_pin_1'];
+        $new_pin_check = $_POST['new_pin_2'];
+
+        // Check if old PIN match current pin from database.
+        if($old_pin !== $pin) {
+            $old_pin_error = 'Your PIN is incorect';
         }
-        echo "</td>";
-        echo "<td>";
-        // OCheck user status if its active and display it in table.
-        if ($row1['user_status'] == 'Active') {
-          echo "<p style='color: green'>Active</p>";
-        } else {
-          // Unblock user.
-          echo "<a href='admin options/unblock_user.php?id=" . $row1['id'] . "'><img src='images/unblock.png' alt='Block user' width='25' height='25'></a>";
+        // Set condition that PIN need to be four digits.
+        if($new_pin && $new_pin_check) {
+            if(!preg_match('/^[0-9]{4}$/', $new_pin)) {
+                echo '<p style="color: red">Password must be four numbers.</p><br>';
+                }
+                // If new pin doesnt match show error.
+                if($new_pin !== $new_pin_check){
+                    $unmatched_pin_error = 'Your new PIN doesnt match';
+                }else {
+                    // Otherwise update user password in table.
+                    $query = "UPDATE users SET user_pass = '$new_pin_check' WHERE user_id = '$user_id'";
+                    $result = mysqli_query($connect, $query);
+                    echo $message = '<h3 style="color: green">Your pin is succsessfuly changed</h3>';
+                    header("refresh:2;url=change_pin.php");
+                    unset($message);
+                    
+            } 
         }
-        // Update user.
-        echo "</td>";
-        echo "<td><a href='admin options/update_user.php?id=" . $row1['id'] . "'><img src='images/edit.png' alt='Block user' width='25' height='25'></a></td>";
-        echo "</tr>";
-      }
+
     }
-    // Add new user.
-    echo "<tr>";
-    echo "<td style='border: solid 1px;' colspan='9'><form action='admin options/new_user_form.php' method='POST'><button class='btn btn-dark w-1000' style='width: 100%;' name='add_user'><img src='images/add_user.png' alt='Add user' width='45' height='45'></button></form></td>";
-    echo "</tr>";
+}
 
-    include 'includes/data_table.js';
 ?>
-    </tbody>
-  </table>
-</div>
 
-<!-- File's which are included in sign_up.php file. -->
-<?php include 'includes/footer.php'; ?>
+<form action="#" method="POST">
+    <div class="mt-5 mb-3">
+        <div>
+            <label class="form-label" style="color: black" for="pin">Your old pin</label>
+            <input class="form-control <?php echo $old_pin_error ? 'is-invalid' : null; ?>" type="password" name="old_pin" placeholder="Old PIN">
+            <div class="invalid-feedback mb-3">
+                <?php echo $old_pin_error; ?>
+            </div>
+        </div>
+        <div>
+            <label class="form-label" style="color: black" for="pin">Enter your new PIN</label>
+            <input class="form-control" type="password" name="new_pin_1" placeholder="New PIN">
+        </div>
+        <div>
+            <label class="form-label" style="color: black" for="pin">Confirm your new PIN</label>
+            <input class="form-control <?php echo $unmatched_pin_error ? 'is-invalid' : null; ?>" type="password" name="new_pin_2" placeholder="New PIN">
+            <div class="invalid-feedback">
+                <?php echo $unmatched_pin_error; ?>
+            </div>
+        </div>
+        <input class="btn btn-dark w-100 mt-5 mb-5" type="submit" class="submit" value="Confirm" name="confirm">
+    </div>
+</form>
+
+<!-- File's which are included to current file. -->
+<?php include '../includes/footer.php'; ?>
