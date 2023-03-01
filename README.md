@@ -9,6 +9,9 @@
 * [CSS(Bootstrap)](#css-bootstrap)
 * [JavaScript](#javascript)
 
+
+* Dump file is located in database folder.
+
 ## Introduction
 ##### Web application allows user to:
 
@@ -38,3 +41,5 @@
 * If by any case admin block existing user, on sign in page when user try to log in he will get message that his account is blocked.
 
 User ID input also have filter_input function.
+
+
