@@ -89,11 +89,11 @@ if (isset($_POST['confirm'])) {
 
 <h2 class="mb-5">Add new user to database</h2>
 <form class='mt-5 mb-5' action='#' method='POST'>
-    <div class="d-flex mt-5 mb-5 form-label" style="color: black; width: 100%;">
+    <div class="d-flex mt-5 mb-5 form-label ms-auto" style="color: black; width: 100%;">
         
-        <input class="form-control <?php echo $fullname_error ? 'is-invalid' : null; ?>" type="text" name="fullname" placeholder="Enter full name">
+        <input class="form-control mx-2 <?php echo $fullname_error ? 'is-invalid' : null; ?>" type="text" name="fullname" placeholder="Enter full name">
         <input class="form-control <?php echo $id_error ? 'is-invalid' : null; ?>" type="text" name="id" placeholder="Enter ID">
-        <input class="form-control <?php echo $password_error ? 'is-invalid' : null; ?>" type="password" name="pass" placeholder="Enter password">
+        <input class="form-control mx-2 <?php echo $password_error ? 'is-invalid' : null; ?>" type="password" name="pass" placeholder="Enter password">
         <input class='btn btn-dark w-500 btn btn-primary ml-3 align-self-end' style="align-content: center;" type="submit" value="Add new user" name="confirm">
     </div>
 </form>
