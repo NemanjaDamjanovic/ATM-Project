@@ -4,11 +4,11 @@
 
 <?php
   // Start a session.
-  session_start();
+  // session_start();
   // Welcome user by his session.
-  if(isset($_SESSION['id'])) {
-    echo '<h1 style="color: green">Welcome Admin ' . ucfirst($_SESSION['id']) . '</h1>';
-  }
+  // if(isset($_SESSION['id'])) {
+  //   echo '<h1 style="color: green">Welcome Admin ' . ucfirst($_SESSION['id']) . '</h1>';
+  // }
 ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.22/datatables.min.css"/>
@@ -99,7 +99,7 @@
     }
     // Add new user.
     echo "<tr>";
-    echo "<td style='border: none;' colspan='8'><form action='admin options/new_user_form.php' method='POST'><button class='btn btn-dark w-1000' style='width: 105%;' name='add_user'><img src='images/add_user.png' alt='Block user' width='45' height='45'></button></form></td>";
+    echo "<td style='border: solid 1px;' colspan='9'><form action='admin options/new_user_form.php' method='POST'><button class='btn btn-dark w-1000' style='width: 100%;' name='add_user'><img src='images/add_user.png' alt='Add user' width='45' height='45'></button></form></td>";
     echo "</tr>";
 
     include 'includes/data_table.js';
