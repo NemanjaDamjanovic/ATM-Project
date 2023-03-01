@@ -11,6 +11,12 @@ if(isset($_POST['submit'])) {
   $user_fullname = $_POST['fullname'];
   $valid = true;
 
+  // If user exist select it from database by his specific user_id.
+  $query = "SELECT * FROM users WHERE user_id = '$user_id'";
+  // Execute the query.
+  $result = mysqli_query($connect, $query);
+  $row = mysqli_fetch_array($result);
+  
   // Check full name field if its not empty.
 if(!empty($user_fullname)) {
   $user_fullname = filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -40,6 +46,7 @@ if($valid) {
     // Execute the query.
     $result = mysqli_query($connect, $query);
     // Redirect new created user to sign in page.
+    sleep(2);
     header('Location: sign_in.php');
     
     // Start session and give user a welcome balance.
