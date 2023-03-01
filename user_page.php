@@ -5,11 +5,6 @@
 <div class="mt-5 mt-5" style="text-align: center;">
 
 <?php
-// Start session.
-session_start();
-// Check if session there is an ID in active session.
-if(isset($_SESSION['id'])) {
-    echo '<h1 style="color: green">Welcome ' . ucfirst($_SESSION['id']) . '</h1>';
     
     // Wrap $_SESSION['id'] into variable.
     $user_id = $_SESSION['id'];
@@ -21,7 +16,7 @@ if(isset($_SESSION['id'])) {
     $row = mysqli_fetch_assoc($result);
     // Retrieve exact value from query, stored in variable.
     $balance = $row['user_balance'];
-}
+
 ?>
 
 </div>
