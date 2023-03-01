@@ -9,9 +9,6 @@
 * [CSS(Bootstrap)](#css-bootstrap)
 * [JavaScript](#javascript)
 
-
-* Dump file is located in database folder.
-
 ## Introduction
 ##### Web application allows user to:
 
@@ -42,4 +39,4 @@
 
 User ID input also have filter_input function.
 
-
+** Dump file is located in database folder.
