@@ -39,4 +39,4 @@
 
 User ID input also have filter_input function.
 
-#### Dump file is located in database folder.
+### Dump file is located in database folder.
